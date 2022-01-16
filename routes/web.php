@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('home');
 });
+Route::get('/orderproduct', function () {
+    return view('orderproduct');
+});
 Route::view('/login','login');
 // Route::view('/phone-verify','verify');
 Route::get('/logout',function(){
@@ -36,5 +39,6 @@ Route::get("cartlist",[ProductController::class,"cartList"]);
 Route::get("removecart/{id}",[ProductController::class,"removeCart"]);
 Route::get("ordernow",[ProductController::class,"orderCart"]);
 Route::post("placeorder",[ProductController::class,"placeOrder"]);
-Route::post("orderProduct",[ProductController::class,"orderProduct"]);
+Route::post("orderconfirm",[ProductController::class,"orderConfirm"]);
+Route::get("detail/orderproduct/{id}",[ProductController::class,"orderProduct"]);
 Route::get('/myorders',[ProductController::class,'myOrders']);

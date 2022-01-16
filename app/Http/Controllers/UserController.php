@@ -3,8 +3,7 @@ namespace App\Http\Controllers;
 use App\Models\UserLogin;
 use Illuminate\Http\Request;
 use Nexmo;
-use Session;
-
+use Illuminate\Support\Facades\Session;
 class UserController extends Controller
 {
     public function login(Request $req)
@@ -18,11 +17,11 @@ class UserController extends Controller
             $user_login->phone_number = $req->phoneNumber;
             $user_login->token   = $verify_token;
             $nexmo = app('Nexmo\Client');
-            // $nexmo->message()->send([
-            //      'to' =>'+880'.(int)$req->phoneNumber,
-            //      'from' => "Alamin",
-            //      'text' => 'Verify code'.$verify_token,
-            //  ]);
+            $nexmo->message()->send([
+                 'to' =>'+880'.(int)$req->phoneNumber,
+                 'from' => "Alamin",
+                 'text' => 'Verify code'.$verify_token,
+             ]);
             $user_login->save();
             $req->session()->flash('message', 'OTP send to your number');
             return view('/verify');

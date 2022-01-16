@@ -23,11 +23,10 @@
                 <input type="hidden" name="prod_id" value={{$product['id']}}>
                 <button class="btn btn-outline-danger mb-3">Add Card</button>
             </form>
-            <form action="/orderProduct" method="post">
-                @csrf
-                <input type="hidden" name="prod_id" value={{$product['id']}}>
-                <button class="btn btn-outline-primary">Buy Now</button>
-            </form>
+        
+                <a href="orderproduct/{{ $product['id'] }}">
+                    <button class="btn btn-outline-primary" >Buy Now</button>
+                </a>
             <br>
             <br>
             <a href="/" class="my-3">Go Back</a>

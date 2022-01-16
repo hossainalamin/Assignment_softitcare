@@ -7,7 +7,7 @@ use App\Models\Product;
 use App\Models\Cart;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
-use Session;
+use Illuminate\Support\Facades\Session;
 
 class ProductController extends Controller
 {
@@ -30,10 +30,7 @@ class ProductController extends Controller
             Cart::where('user_id', $cart->user_id)
                 ->where('prod_id', $cart->prod_id)->get();
             $cart->save();
-            return redirect('/') . "<script>
-            alert('Add to cart successfully!');
-            window.location('/');
-            </script>";;
+            return redirect('/');
         } else {
             return redirect("login");
         }
@@ -68,13 +65,37 @@ class ProductController extends Controller
             ->sum('products.price');
         return view('ordernow', ["total" => $price]);
     }
-    public function orderProduct(Request $req)
+    public function orderProduct(Request $req, $id)
     {
+        if ($req->session()->has('phoneverify')) {
+            $product = Product::find($id);
+            return view('orderproduct', ["product" => $product]);
+        } else {
+            return redirect("login");
+        }
         $id = $req->prod_id;
-        $price = DB::table('products')
-            ->where('id', $id)
-            ->sum('products.price');
-        return view('ordernow', ["total" => $price]);
+        $data = DB::table('products')
+            ->where('id', $id);
+        return view('ordernow', ["total" => $data]);
+    }
+    public function orderConfirm(Request $req)
+    {
+        $order = new Order();
+        $order->product_id = $req->prod_id;
+        $order->user_id    = $req->user_id;
+        $order->status     = 'pending';
+        $order->payment_method = $req->payment;
+        $order->payment_status = "pending";
+        $order->address = $req->address;
+        if (empty($order->payment_method) or empty($order->address)) {
+            return redirect('ordernow') . "<script>
+            alert('Any of the feild should not be empty!');
+            window.location('ordernow');
+            </script>";
+        } else {
+            $order->save();
+            return redirect('/')->with('order-message', 'Order placed');
+        }
     }
     public function placeOrder(Request $req)
     {
@@ -98,8 +119,7 @@ class ProductController extends Controller
                 Cart::where('user_id', $user_id)->delete();
             }
         }
-        $req->session()->flash('message', 'Order placed');
-        return redirect('/');
+        return redirect('/')->with('order-message', 'Order placed');
     }
     public function myOrders()
     {
