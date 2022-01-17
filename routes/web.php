@@ -33,12 +33,12 @@ Route::post('/login',[UserController::class,'login']);
 Route::post('/verify',[UserController::class,'postVerify']);
 //product controller
 Route::get('/',[ProductController::class,'getAllProduct']);
-Route::get("detail/{id}",[ProductController::class,"detail"]);
+Route::get("detail/{id}",[ProductController::class,"detail"])->where('id','[0-9]+');
 Route::post("addcart",[ProductController::class,"addCart"]);
 Route::get("cartlist",[ProductController::class,"cartList"]);
-Route::get("removecart/{id}",[ProductController::class,"removeCart"]);
+Route::get("removecart/{id}",[ProductController::class,"removeCart"])->where('id','[0-9]+');
 Route::get("ordernow",[ProductController::class,"orderCart"]);
 Route::post("placeorder",[ProductController::class,"placeOrder"]);
 Route::post("orderconfirm",[ProductController::class,"orderConfirm"]);
-Route::get("detail/orderproduct/{id}",[ProductController::class,"orderProduct"]);
+Route::get("detail/orderproduct/{id}",[ProductController::class,"orderProduct"])->where('id','[0-9]+');
 Route::get('/myorders',[ProductController::class,'myOrders']);
